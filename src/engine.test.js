@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { next, parse } from "./engine";
+import { next, parse, checkNeighbors } from "./engine";
 const _ = false;
 const o = true;
 describe("next", () => {
@@ -40,5 +40,24 @@ describe("parse", () => {
       [_, o, _],
       [_, _, _],
     ]);
+  });
+});
+
+describe("checkNeighbors", () => {
+  it("should return 3", () => {
+    const array = [
+      [false, false, false],
+      [true, true, true],
+      [false, false, false]
+    ];
+    expect(checkNeighbors(array, 2, 1)).to.equal(3);
+  });
+  it("should return 8", () => {
+    const array = [
+      [true, true, true],
+      [true, true, true],
+      [true, true, true]
+    ];
+    expect(checkNeighbors(array, 1, 1)).to.equal(8);
   });
 });

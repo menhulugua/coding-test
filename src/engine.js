@@ -1,13 +1,14 @@
 // (world: boolean[][]) => boolean[][]
 export const next = (world) => {
-  let newWorld = [...world];
   let width = world[0].length;
   let height = world.length;
+  let newWorld = [...Array(height)].map(a => Array(width).fill(false));
 
   for (let i = 0; i < height; i++) {
     for (let j = 0; j < width; j++) {
-      let neighbors = checkNeighbors(newWorld, i, j);
-      if (newWorld[i][j]) {
+      newWorld[i][j] = world[i][j];
+      let neighbors = checkNeighbors(world, i, j);
+      if (world[i][j]) {
         if (neighbors < 2 || neighbors >= 4)
           newWorld[i][j] = false;  
       } else {
@@ -22,15 +23,15 @@ export const next = (world) => {
 
 
 // return number of neighbors
-const checkNeighbors = (world, i, j) => {
+export const checkNeighbors = (world, i, j) => {
   let count = 0;
   let width = world[0].length;
   let height = world.length;
   // up
-  if (i - 1 >= 0 &&  world[i - i][j])
+  if (i - 1 >= 0 && world[i - 1][j])
     count++;
   // down
-  if (i + 1 < height &&  world[i + 1][j])
+  if (i + 1 < height && world[i + 1][j])
     count++;
   // left
   if (j - 1 >= 0 && world[i][j - 1])
@@ -39,16 +40,16 @@ const checkNeighbors = (world, i, j) => {
   if (j + 1 < width && world[i][j + 1])
     count++;
   //up left
-  if (i - 1 >= 0 && j - 1 >= 0 &&  world[i - 1][j - 1])
+  if (i - 1 >= 0 && j - 1 >= 0 && world[i - 1][j - 1])
     count++;
   // up right
   if (i - 1 >= 0 && j + 1 < width && world[i - 1][j + 1])
     count++;
   //down left
-  if (i + 1 < height && j - 1 >= 0 &&  world[i + 1][j - 1])
+  if (i + 1 < height && j - 1 >= 0 && world[i + 1][j - 1])
     count++;
   //down right
-  if (i + 1 < height && j + 1 < width &&  world[i + 1][j + 1])
+  if (i + 1 < height && j + 1 < width && world[i + 1][j + 1])
     count++;
 
   return count;
