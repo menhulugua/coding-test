@@ -6,16 +6,18 @@
     <canvas></canvas>
     <div>
       Select a pattern
-      <select id="selectPattern" onchange="handleChange()">
+      <select id="selectPattern">
       </select>
       <p id="description"></p>
-      <button onclick="evolution()">Start</button>
+      <button id="start">Start</button>
     </div>
   </body>
-  <script>
+  <script type="module">
+    import { parse, next } from './src/engine.js';
+    import { WORLD_WIDTH, WORLD_HEIGHT } from './constants.js';
     const scale = 4;
-    const worldWidth = 480;
-    const worldHeight = 240;
+    const worldWidth = WORLD_WIDTH;
+    const worldHeight = WORLD_HEIGHT;
 
     const canvas = document.querySelector("canvas");
     canvas.width = worldWidth * scale;
@@ -35,8 +37,9 @@
     };
 
     
-
+    let interval;
     let data = [];
+    let worldArray;
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -53,6 +56,7 @@
     xhttp.send();
 
     const handleChange = () => {
+      clearInterval(interval);
       let currentPattern = data[document.getElementById('selectPattern').value];
       document.getElementById('description').innerHTML = currentPattern.description;
 
@@ -60,31 +64,18 @@
       pattern = pattern.map(row => row.split(''));   
 
       if (Array.isArray(pattern) && Array.isArray(pattern[0])) {
-        let world = putPatternInWorld(pattern);
-        render(world);
+        worldArray = parse(pattern);
+        render(worldArray);
       }
-    }
-
-    const putPatternInWorld = (pattern) => {
-      let world = [...Array(worldHeight)].map(a => Array(worldWidth).fill(0));
-      let width = pattern[0].length;
-      let height = pattern.length;
-
-      let startX = Math.floor((worldWidth - width) / 2);
-      let startY = Math.floor((worldHeight - height) / 2);
-
-      for (let i = 0; i < height; i++) {
-        for (let j = 0; j < width; j++) {
-          if (pattern[i][j] === 'O')
-            world[startY + i][startX + j] = 1;
-        }
-      }
-
-      return world;
     }
 
     const evolution = () => {
-
+      interval = setInterval(() => {
+        worldArray = next(worldArray);
+      }, 100);
     }
+
+    document.getElementById("start").addEventListener("click", evolution);
+    document.getElementById("selectPattern").addEventListener("change", handleChange);
   </script>
 </html>
