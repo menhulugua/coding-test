@@ -23,7 +23,6 @@ export const next = (world) => {
 
 // return number of neighbors
 const checkNeighbors = (world, i, j) => {
-  try{
   let count = 0;
   let width = world[0].length;
   let height = world.length;
@@ -53,7 +52,6 @@ const checkNeighbors = (world, i, j) => {
     count++;
 
   return count;
-  }catch(e){console.log(i,j)}
 }
 
 // (pattern: string) => boolean[][]

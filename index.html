@@ -36,7 +36,7 @@
     };
 
     
-    let interval;
+    let interval = null;
     let data = [];
     let worldArray = [...Array(worldHeight)].map(a => Array(worldWidth).fill(false));
     const xhttp = new XMLHttpRequest();
@@ -56,6 +56,7 @@
 
     const handleChange = () => {
       clearInterval(interval);
+      interval = null;
       worldArray = [...Array(worldHeight)].map(a => Array(worldWidth).fill(false));
       let currentPattern = data[document.getElementById('selectPattern').value];
       document.getElementById('description').innerHTML = currentPattern.description;
@@ -65,6 +66,8 @@
     }
 
     const patternToWorld = (pattern) => {
+      if (!pattern || !pattern[0])
+        return 0;
       const width = pattern[0].length;
       const height = pattern.length;
 
@@ -79,10 +82,12 @@
     };
 
     const evolution = () => {
-      interval = setInterval(() => {
-        worldArray = next(worldArray);
-        render(worldArray);
-      }, 100);
+      if (!interval) {
+        interval = setInterval(() => {
+          worldArray = next(worldArray);
+          render(worldArray);
+        }, 1000);
+      }
     }
 
     document.getElementById("start").addEventListener("click", evolution);

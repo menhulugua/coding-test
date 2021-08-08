@@ -31,6 +31,9 @@ describe("parse", () => {
   it("should return [] given ''", () => {
     expect(parse("")).to.deep.equal([]);
   });
+  it("should return [] given '\n\n'", () => {
+    expect(parse("")).to.deep.equal([]);
+  });
   it("should parse O as true and . as false", () => {
     expect(parse("...\n.O.\n...\n")).to.deep.equal([
       [_, _, _],
