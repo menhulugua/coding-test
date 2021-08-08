@@ -2,11 +2,10 @@
 export const next = (world) => {
   let width = world[0].length;
   let height = world.length;
-  let newWorld = [...Array(height)].map(a => Array(width).fill(false));
+  let newWorld = [...world].map(a => [...a]);
 
   for (let i = 0; i < height; i++) {
     for (let j = 0; j < width; j++) {
-      newWorld[i][j] = world[i][j];
       let neighbors = checkNeighbors(world, i, j);
       if (world[i][j]) {
         if (neighbors < 2 || neighbors >= 4)
