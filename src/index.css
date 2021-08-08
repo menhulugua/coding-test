@@ -10,6 +10,7 @@ body {
   flex-direction: column;
   background: #000;
   height: 100%;
+  color: #fff;
 }
 
 canvas {

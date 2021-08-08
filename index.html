@@ -4,8 +4,15 @@
   </head>
   <body>
     <canvas></canvas>
+    <div>
+      Select a pattern
+      <select id="selectPattern" onchange="handleChange()">
+      </select>
+      <p id="description"></p>
+      <button onclick="evolution()">Start</button>
+    </div>
   </body>
-  <script type="module">
+  <script>
     const scale = 4;
     const worldWidth = 480;
     const worldHeight = 240;
@@ -26,5 +33,58 @@
         )
       );
     };
+
+    
+
+    let data = [];
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          data = JSON.parse(xhttp.response);
+          let options = '';
+          data.forEach((option, index) => {
+            options += `<option value="${index}">${option.name}</option>`;
+          });
+          document.getElementById('selectPattern').innerHTML = options;
+          handleChange();
+        }
+    };
+    xhttp.open("GET", "./src/lexicon.json", true);
+    xhttp.send();
+
+    const handleChange = () => {
+      let currentPattern = data[document.getElementById('selectPattern').value];
+      document.getElementById('description').innerHTML = currentPattern.description;
+
+      let pattern = currentPattern.pattern.split('\n');
+      pattern = pattern.map(row => row.split(''));   
+
+      if (Array.isArray(pattern) && Array.isArray(pattern[0])) {
+        let world = putPatternInWorld(pattern);
+        render(world);
+      }
+    }
+
+    const putPatternInWorld = (pattern) => {
+      let world = [...Array(worldHeight)].map(a => Array(worldWidth).fill(0));
+      let width = pattern[0].length;
+      let height = pattern.length;
+
+      let startX = Math.floor((worldWidth - width) / 2);
+      let startY = Math.floor((worldHeight - height) / 2);
+
+      for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+          if (pattern[i][j] === 'O')
+            world[startY + i][startX + j] = 1;
+        }
+      }
+
+      return world;
+    }
+
+    const evolution = () => {
+
+    }
   </script>
 </html>
