@@ -14,10 +14,9 @@
   </body>
   <script type="module">
     import { parse, next } from './src/engine.js';
-    import { WORLD_WIDTH, WORLD_HEIGHT } from './constants.js';
     const scale = 4;
-    const worldWidth = WORLD_WIDTH;
-    const worldHeight = WORLD_HEIGHT;
+    const worldWidth = 480;
+    const worldHeight = 240;
 
     const canvas = document.querySelector("canvas");
     canvas.width = worldWidth * scale;
@@ -39,7 +38,7 @@
     
     let interval;
     let data = [];
-    let worldArray;
+    let worldArray = [...Array(worldHeight)].map(a => Array(worldWidth).fill(false));
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -57,21 +56,32 @@
 
     const handleChange = () => {
       clearInterval(interval);
+      worldArray = [...Array(worldHeight)].map(a => Array(worldWidth).fill(false));
       let currentPattern = data[document.getElementById('selectPattern').value];
       document.getElementById('description').innerHTML = currentPattern.description;
-
-      let pattern = currentPattern.pattern.split('\n');
-      pattern = pattern.map(row => row.split(''));   
-
-      if (Array.isArray(pattern) && Array.isArray(pattern[0])) {
-        worldArray = parse(pattern);
-        render(worldArray);
-      }
+        
+      patternToWorld(parse(currentPattern.pattern));
+      render(worldArray);
     }
+
+    const patternToWorld = (pattern) => {
+      const width = pattern[0].length;
+      const height = pattern.length;
+
+      const startX = Math.floor((worldWidth - width) / 2);
+      const startY = Math.floor((worldHeight - height) / 2);
+
+      for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+            worldArray[startY + i][startX + j] = pattern[i][j];
+        }
+      }
+    };
 
     const evolution = () => {
       interval = setInterval(() => {
         worldArray = next(worldArray);
+        render(worldArray);
       }, 100);
     }
 

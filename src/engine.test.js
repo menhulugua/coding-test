@@ -17,7 +17,7 @@ describe("next", () => {
     ]);
   });
 
-  it.skip("should be dead if there is no neighbours", () => {
+  it("should be dead if there is no neighbours", () => {
     const result = next([
       [_, _, _],
       [_, o, _],
@@ -31,7 +31,7 @@ describe("parse", () => {
   it("should return [] given ''", () => {
     expect(parse("")).to.deep.equal([]);
   });
-  it.skip("should parse O as true and . as false", () => {
+  it("should parse O as true and . as false", () => {
     expect(parse("...\n.O.\n...\n")).to.deep.equal([
       [_, _, _],
       [_, o, _],
